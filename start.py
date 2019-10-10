@@ -425,7 +425,7 @@ def healthiest(samples, metadata):
 
 # Now we want to summarize the data on the phylum level and convert counts
 # to percentages. We start by summarizing on the phylum level
-phyla = pd.read_csv("data/phyla.csv")
+phyla = pd.read_csv("data/phyla.csv", index_col=0)
 
 # This is just the metadata
 meta = pd.read_csv(
