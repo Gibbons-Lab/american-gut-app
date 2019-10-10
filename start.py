@@ -423,31 +423,14 @@ def healthiest(samples, metadata):
     return healthiest_sample
 
 
-# We start by reading our genus level data
-genera = pd.read_csv(
-    path.join("data", "american_gut_genus.csv"), dtype={"id": str}
-)
-
-# Here we calculate the "library size", the total sum of counts/reads for
-# each sample
-libsize = genera.groupby("id")["count"].sum()
+# Now we want to summarize the data on the phylum level and convert counts
+# to percentages. We start by summarizing on the phylum level
+phyla = pd.read_csv("data/phyla.csv")
 
 # This is just the metadata
 meta = pd.read_csv(
-    path.join("data", "metadata.tsv"), dtype={"id": str}, sep="\t"
+    path.join("data", "metadata.tsv.gz"), dtype={"id": str}, sep="\t"
 )
-
-# Now we want to summarize the data on the phylum level and convert counts
-# to percentages. We start by summarizing on the phylum level
-phyla = genera.groupby(["id", "Phylum"])["count"].sum().reset_index()
-
-# Now we convert the counts to fractions by dividing by the library size
-phyla["relative"] = phyla["count"].values / libsize[phyla.id].values
-
-# We will only keep the fractions for the two phyla we're interested in
-phyla = pd.pivot_table(
-    phyla, index="id", columns="Phylum", values="relative", fill_value=0
-)[["Bacteroidetes", "Firmicutes"]]
 
 # As a last step we will load the PCoA coordinates generated in
 # `beta_diversity.py`, select 1000 random individuals and merge the
