@@ -8,7 +8,15 @@ import plotly.graph_objs as go
 import plotly.figure_factory as ff
 import numpy as np
 import pandas as pd
-from start import samples, find_closest, healthiest_sample, meta, describe, bact_plot, firm_plot
+from start import (
+    samples,
+    find_closest,
+    healthiest_sample,
+    meta,
+    describe,
+    bact_plot,
+    firm_plot,
+)
 
 
 close = pd.Series(0, index=samples.index)
@@ -83,7 +91,7 @@ def beta_figure(close, size=16):
                     "opacity": 1.0,
                 },
             ),
-           go.Scattergl(
+            go.Scattergl(
                 name="",
                 x=[ns.PC1.mean()],
                 y=[ns.PC2.mean()],
@@ -101,7 +109,7 @@ def beta_figure(close, size=16):
                     "line": {"width": size / 3, "color": "#07b556"},
                     "opacity": 1.0,
                 },
-            )
+            ),
         ],
         "layout": go.Layout(
             title="Bray-Curtis PCoA",
@@ -181,16 +189,12 @@ app.layout = html.Div(
         ),
         html.Div(
             children=[
-                html.P(
-                    "Introduction:"
-                ),
+                html.P("Introduction:"),
                 html.P(
                     "The human gut is comprised primarily of two bacterial phyla, Firmicutes and Bacteroidetes. The ratio of these two bacteria in the gut have strong correlations to the diet, exercise, and potential obesity of a person. Understanding their relationship has important implications to our health. Input your distributions to see where you fall on the Bray-Curtis plot of 1000 random individuals from the American Gut Project."
                 ),
                 html.P("Legend:"),
-                html.P(
-                    "The green point is you!"
-                ),
+                html.P("The green point is you!"),
                 html.P("Bluer points represent a higher ratio of Firmicutes."),
                 html.P(
                     "Redder points represent a higher ratio of Bacteroidetes."
@@ -256,7 +260,6 @@ app.layout = html.Div(
             figure=beta_figure(close),
             style={"height": "70vh", "margin": 0, "padding": 0},
         ),
-        
         html.Div(
             [
                 "point size",
@@ -273,20 +276,16 @@ app.layout = html.Div(
             ],
             style={"margin": "0 5vw", "margin-bottom": "2em"},
         ),
-              dcc.Graph(
+        dcc.Graph(
             id="firmicutes_plot",
-            figure=firm_plot(samples, .2, healthiest_sample),
+            figure=firm_plot(samples, 0.2, healthiest_sample),
             style={"height": "70vh", "margin": 0, "padding": 0},
-                  
         ),
-              dcc.Graph(
+        dcc.Graph(
             id="bacteroidetes_plot",
-            figure=bact_plot(samples, .4, healthiest_sample),
+            figure=bact_plot(samples, 0.4, healthiest_sample),
             style={"height": "70vh", "margin": 0, "padding": 0},
-                  
-        ), 
-        
-
+        ),
         html.Br(),
         html.H2(
             style={"color": "#3F51B5", "font-weight": "300"},
@@ -345,13 +344,11 @@ def update_bac(firm, bac):
         dash.dependencies.Output("info_text", "children"),
         dash.dependencies.Output("bacteroidetes_plot", "figure"),
         dash.dependencies.Output("firmicutes_plot", "figure"),
-
     ],
     [
         dash.dependencies.Input("firm_slider", "value"),
         dash.dependencies.Input("bac_slider", "value"),
         dash.dependencies.Input("size_slider", "value"),
-        
     ],
 )
 def update_figure(firm, bac, s):
@@ -365,11 +362,12 @@ def update_figure(firm, bac, s):
         beta_figure(close, s),
         info_fields(description),
         info_text(description),
-        bact_plot(samples, bac/100, healthiest_sample),
-        firm_plot(samples, firm/100, healthiest_sample)
-
+        bact_plot(samples, bac / 100, healthiest_sample),
+        firm_plot(samples, firm / 100, healthiest_sample),
     )
 
+
+server = app.server
 
 if __name__ == "__main__":
     app.run_server(debug=True)
