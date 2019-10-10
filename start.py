@@ -7,6 +7,7 @@ from os import path
 import plotly.figure_factory as ff
 import plotly.graph_objs as go
 
+
 def find_closest(bacteroidetes, firmicutes, samples, n=5):
     """Find the id of the members closest to the input.
     Parameters
@@ -79,13 +80,9 @@ def describe(samples, metadata):
         sample_metadata.cancer
         == "Diagnosed by a medical professional (doctor, physician assistant)"
     ].shape[0]
-    samples_female = sample_metadata[
-        sample_metadata.sex
-        == "female"
-    ].shape[0]
+    samples_female = sample_metadata[sample_metadata.sex == "female"].shape[0]
     samples_consume_alcohol = sample_metadata[
-        sample_metadata.alcohol_consumption
-        == "true"
+        sample_metadata.alcohol_consumption == "true"
     ].shape[0]
     samples_with_college = sample_metadata[
         sample_metadata.level_of_education == "Bachelor's degree"
@@ -93,7 +90,10 @@ def describe(samples, metadata):
     samples_who_smoke = sample_metadata[
         (sample_metadata.smoking_frequency == "Rarely (a few times/month)")
         & (sample_metadata.smoking_frequency == "Daily")
-        & (sample_metadata.smoking_frequency == "Occasionally (1-2 times/week)")
+        & (
+            sample_metadata.smoking_frequency
+            == "Occasionally (1-2 times/week)"
+        )
         & (sample_metadata.smoking_frequency == "Regularly (3-5 times/week)")
     ].shape[0]
     sample_metadata.fillna(0)
@@ -194,7 +194,7 @@ def describe(samples, metadata):
             "values": height_average,
             "icon": "ruler-vertical",
         },
-        ignore_index = True,
+        ignore_index=True,
     )
     return_display = return_display.append(
         {
@@ -202,7 +202,6 @@ def describe(samples, metadata):
             "values": samples_consume_alcohol,
             "icon": "beer",
         },
-    
         ignore_index=True,
     )
     return_display = return_display.append(
@@ -211,28 +210,18 @@ def describe(samples, metadata):
             "values": samples_with_cardio,
             "icon": "heartbeat",
         },
-    
         ignore_index=True,
     )
     return_display = return_display.append(
-        {
-            "names": "Females",
-            "values": samples_female,
-            "icon": "female",
-        },
-    
+        {"names": "Females", "values": samples_female, "icon": "female"},
         ignore_index=True,
     )
     return_display = return_display.append(
-        {
-            "names": "Smokers",
-            "values": samples_who_smoke,
-            "icon": "smoking",
-        },
-    
+        {"names": "Smokers", "values": samples_who_smoke, "icon": "smoking"},
         ignore_index=True,
     )
     return return_display
+
 
 def firm_plot(samples, firmicutes, healthiest_sample):
     """
@@ -246,12 +235,12 @@ def firm_plot(samples, firmicutes, healthiest_sample):
      plotly graph
    """
     hist_data = [samples["Firmicutes"]]
-    group_labels = ['Firmicutes']
+    group_labels = ["Firmicutes"]
     firm = ff.create_distplot(hist_data, group_labels, show_hist=False)
-    firm['layout'].update(title='Firmicutes Sample Distribution ')
-    firm['layout'].update(
+    firm["layout"].update(title="Firmicutes Sample Distribution ")
+    firm["layout"].update(
         showlegend=False,
-        annotations= [
+        annotations=[
             dict(
                 x=firmicutes,
                 y=0,
@@ -269,9 +258,10 @@ def firm_plot(samples, firmicutes, healthiest_sample):
                 borderwidth=2,
                 borderpad=4,
                 bgcolor="#69f564",
-                opacity=0.8
-            ), dict(
-                x=healthiest_sample['Firmicutes'],
+                opacity=0.8,
+            ),
+            dict(
+                x=healthiest_sample["Firmicutes"],
                 y=0,
                 xref="x",
                 yref="y",
@@ -287,15 +277,14 @@ def firm_plot(samples, firmicutes, healthiest_sample):
                 borderwidth=2,
                 borderpad=4,
                 bgcolor="#b977f2",
-                opacity=0.8
-            )
-        ]
-        
+                opacity=0.8,
+            ),
+        ],
     )
 
     return firm
 
-    
+
 def bact_plot(samples, bacteroidetes, healthiest_sample):
     """
      Returns a graph of the distribution of the data in a graph
@@ -307,15 +296,16 @@ def bact_plot(samples, bacteroidetes, healthiest_sample):
      =======
      plotly graph
    """
-    import plotly.figure_factory as ff 
-    hist_data = [samples["Bacteroidetes"]]
-    group_labels = ['Bacteroidetes']
-    bact = ff.create_distplot(hist_data, group_labels, show_hist=False)
-    bact['layout'].update(title='Bacteroidetes Sample Distribution ')
+    import plotly.figure_factory as ff
 
-    bact['layout'].update(
+    hist_data = [samples["Bacteroidetes"]]
+    group_labels = ["Bacteroidetes"]
+    bact = ff.create_distplot(hist_data, group_labels, show_hist=False)
+    bact["layout"].update(title="Bacteroidetes Sample Distribution ")
+
+    bact["layout"].update(
         showlegend=False,
-        annotations= [
+        annotations=[
             dict(
                 x=bacteroidetes,
                 y=0,
@@ -333,10 +323,10 @@ def bact_plot(samples, bacteroidetes, healthiest_sample):
                 borderwidth=2,
                 borderpad=4,
                 bgcolor="#69f564",
-                opacity=0.8
+                opacity=0.8,
             ),
             dict(
-                x=healthiest_sample['Bacteroidetes'],
+                x=healthiest_sample["Bacteroidetes"],
                 y=0,
                 xref="x",
                 yref="y",
@@ -352,13 +342,13 @@ def bact_plot(samples, bacteroidetes, healthiest_sample):
                 borderwidth=2,
                 borderpad=4,
                 bgcolor="#b977f2",
-                opacity=0.8
-            )
-        ]
-        
+                opacity=0.8,
+            ),
+        ],
     )
     return bact
-     
+
+
 def healthiest(samples, metadata):
     """
      Return the average firmicutes and bacteroidites levels for the healthiest individuals in the metadata and standard deviation
@@ -435,7 +425,7 @@ def healthiest(samples, metadata):
 
 # We start by reading our genus level data
 genera = pd.read_csv(
-    path.join("..", "data", "american_gut_genus.csv"), dtype={"id": str}
+    path.join("data", "american_gut_genus.csv"), dtype={"id": str}
 )
 
 # Here we calculate the "library size", the total sum of counts/reads for
@@ -444,7 +434,7 @@ libsize = genera.groupby("id")["count"].sum()
 
 # This is just the metadata
 meta = pd.read_csv(
-    path.join("..", "data", "metadata.tsv"), dtype={"id": str}, sep="\t"
+    path.join("data", "metadata.tsv"), dtype={"id": str}, sep="\t"
 )
 
 # Now we want to summarize the data on the phylum level and convert counts
