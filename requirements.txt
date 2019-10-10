@@ -2,3 +2,4 @@ pandas
 dash
 dash-daq
 gunicorn
+scipy
