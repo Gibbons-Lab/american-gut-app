@@ -1,0 +1,4 @@
+pandas
+dash
+dash-daq
+gunicorn
