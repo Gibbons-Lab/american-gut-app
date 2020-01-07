@@ -31,5 +31,9 @@ python app.py
 
 On Windows you can do that with the conda terminal.
 
+## Play with app online
+
+You can play with the app online by clicking on this [link](https://american-gut.herokuapp.com/).
+
 
 
